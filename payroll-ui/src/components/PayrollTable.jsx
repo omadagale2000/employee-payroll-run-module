@@ -1,12 +1,5 @@
 import styles from './PayrollTable.module.css';
-
-function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
+import { formatCurrency } from '../utils/formatCurrency';
 
 function SkeletonRow() {
   return (

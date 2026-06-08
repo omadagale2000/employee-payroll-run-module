@@ -6,19 +6,13 @@ namespace Payroll.API.Controllers
 {
     [ApiController]
     [Route("api/attendance")]
-    public class AttendanceController : Controller
+    public class AttendanceController : ControllerBase
     {
         private readonly IAttendanceService _service;
 
         public AttendanceController(IAttendanceService service)
         {
             _service = service;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult>Get()
-        {
-            return Ok(await _service.GetAll());
         }
 
         [HttpGet("{month}/{year}")]

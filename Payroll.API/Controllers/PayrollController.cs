@@ -17,14 +17,12 @@ namespace Payroll.API.Controllers
         }
 
         [HttpPost("run")]
-
         public async Task<IActionResult> Run(RunPayrollRequest request)
         {
             try
             {
-                await _service.RunPayroll(request.Month,request.Year);
-
-                return Created("","Payroll Generated");
+                await _service.RunPayroll(request.Month, request.Year);
+                return Created("", "Payroll Generated");
             }
 
             catch

@@ -4,6 +4,7 @@ import PayrollTable from '../components/PayrollTable';
 import PayslipModal from '../components/PayslipModal';
 import Toast from '../components/Toast';
 import { runPayroll, getPayroll, getPayslip } from '../services/payrollApi';
+import { MONTH_NAMES } from '../utils/dateConstants';
 import styles from './PayrollDashboard.module.css';
 
 export default function PayrollDashboard() {
@@ -45,12 +46,12 @@ export default function PayrollDashboard() {
     setCurrentPeriod({ month, year });
     try {
       await runPayroll(month, year);
-      setToast({ type: 'success', message: `Payroll for ${monthName(month)} ${year} generated successfully.` });
+      setToast({ type: 'success', message: `Payroll for ${MONTH_NAMES[month]} ${year} generated successfully.` });
       await loadPayroll(month, year);
     } catch (err) {
       const msg = err.message.toLowerCase();
       if (msg.includes('payroll exists') || msg.includes('conflict')) {
-        setToast({ type: 'error', message: `Payroll for ${monthName(month)} ${year} already exists.` });
+        setToast({ type: 'error', message: `Payroll for ${MONTH_NAMES[month]} ${year} already exists.` });
         // Still load the existing data
         await loadPayroll(month, year);
       } else {
@@ -118,10 +119,4 @@ export default function PayrollDashboard() {
       )}
     </div>
   );
-}
-
-function monthName(m) {
-  const names = ['', 'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'];
-  return names[m] ?? '';
 }

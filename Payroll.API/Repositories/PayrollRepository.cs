@@ -9,140 +9,69 @@ namespace Payroll.API.Repositories
     {
         private readonly IConfiguration _config;
 
+        private const string PayrollSelectSql = @"
+            SELECT
+                pr.Id         AS RunId,
+                e.Id          AS EmployeeId,
+                e.Name,
+                e.BasicSalary,
+                d.Id          AS DepartmentId,
+                d.Name        AS DepartmentName,
+                a.WorkingDays,
+                a.DaysPresent,
+                pd.GrossPay,
+                pd.PFDeduction,
+                pd.ProfessionalTax,
+                pd.NetPay
+            FROM PayrollDetails pd
+            JOIN Employees     e  ON e.Id  = pd.EmployeeId
+            JOIN Departments   d  ON d.Id  = e.DepartmentId
+            JOIN PayrollRun    pr ON pr.Id = pd.PayrollRunId
+            JOIN Attendance    a  ON a.EmployeeId = e.Id
+                                 AND a.Month = pr.Month
+                                 AND a.Year  = pr.Year";
+
         public PayrollRepository(IConfiguration config)
         {
             _config = config;
         }
 
-        public async Task RunPayroll(int month,int year)
-        {
-            using var conn =
-            new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-
-            await conn.ExecuteAsync(
-                "usp_RunPayroll",
-
-                new
-                {
-                    Month = month,
-                    Year = year
-                },
-
-                commandType:
-                CommandType.StoredProcedure
-            );
-        }
-
-        public async Task<bool>Exists(int month,int year)
-        {
-            using var conn =new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-
-            var sql = @"
-                        SELECT COUNT(*)
-                        FROM PayrollRun
-                        WHERE Month=@month
-                        AND Year=@year";
-
-            return await conn.ExecuteScalarAsync<int>(sql,new { month, year }) > 0;
-        }
-
-        public async Task<IEnumerable<PayrollResponseDto>>GetPayroll(int month,int year)
+        public async Task RunPayroll(int month, int year)
         {
             using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            var sql = @"
-                        SELECT
-
-                        pr.Id AS RunId,
-                        e.Id AS EmployeeId,
-                        e.Name,
-                        e.BasicSalary,
-
-                        d.Id AS DepartmentId,
-                        d.Name AS DepartmentName,
-
-                        a.WorkingDays,
-                        a.DaysPresent,
-
-                        pd.GrossPay,
-                        pd.PFDeduction,
-                        pd.ProfessionalTax,
-                        pd.NetPay
-
-                        FROM PayrollDetails pd
-
-                        JOIN Employees e
-                        ON e.Id = pd.EmployeeId
-
-                        JOIN Departments d
-                        ON d.Id = e.DepartmentId
-
-                        JOIN PayrollRun pr
-                        ON pr.Id = pd.PayrollRunId
-
-                        JOIN Attendance a
-                        ON a.EmployeeId = e.Id
-                        AND a.Month = pr.Month
-                        AND a.Year = pr.Year
-
-                        WHERE
-                        pr.Month = @month
-                        AND pr.Year = @year";
-
-            return await conn.QueryAsync<PayrollResponseDto>(sql,new { month, year });
+            await conn.ExecuteAsync(
+                "usp_RunPayroll",
+                new { Month = month, Year = year },
+                commandType: CommandType.StoredProcedure
+            );
         }
 
-        public async Task<PayrollResponseDto?>GetSlip(int runId,int employeeId)
+        public async Task<bool> Exists(int month, int year)
         {
-            using var conn =new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            var sql = @"
-                        SELECT TOP 1
+            var sql = "SELECT COUNT(*) FROM PayrollRun WHERE Month = @month AND Year = @year";
 
-                        pr.Id AS RunId,
-                        e.Id AS EmployeeId,
-                        e.Name,
-                        e.BasicSalary,
+            return await conn.ExecuteScalarAsync<int>(sql, new { month, year }) > 0;
+        }
 
-                        d.Id AS DepartmentId,
-                        d.Name AS DepartmentName,
+        public async Task<IEnumerable<PayrollResponseDto>> GetPayroll(int month, int year)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-                        a.WorkingDays,
-                        a.DaysPresent,
+            var sql = $"{PayrollSelectSql} WHERE pr.Month = @month AND pr.Year = @year";
 
-                        pd.GrossPay,
-                        pd.PFDeduction,
-                        pd.ProfessionalTax,
-                        pd.NetPay
+            return await conn.QueryAsync<PayrollResponseDto>(sql, new { month, year });
+        }
 
-                        FROM PayrollDetails pd
+        public async Task<PayrollResponseDto?> GetSlip(int runId, int employeeId)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-                        JOIN Employees e
-                        ON e.Id = pd.EmployeeId
+            var sql = $"{PayrollSelectSql} WHERE pd.PayrollRunId = @runId AND pd.EmployeeId = @employeeId";
 
-                        JOIN Departments d
-                        ON d.Id = e.DepartmentId
-
-                        JOIN PayrollRun pr
-                        ON pr.Id = pd.PayrollRunId
-
-                        JOIN Attendance a
-                        ON a.EmployeeId = e.Id
-                        AND a.Month = pr.Month
-                        AND a.Year = pr.Year
-
-                        WHERE
-                        pd.PayrollRunId = @runId
-                        AND pd.EmployeeId = @employeeId";
-
-            return await conn.QueryFirstOrDefaultAsync<PayrollResponseDto>(
-                sql,
-                new
-                {
-                    runId,
-                    employeeId
-                }
-            );
+            return await conn.QueryFirstOrDefaultAsync<PayrollResponseDto>(sql, new { runId, employeeId });
         }
     }
 }

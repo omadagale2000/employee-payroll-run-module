@@ -1,18 +1,7 @@
 import { useEffect, useRef } from 'react';
 import styles from './PayslipModal.module.css';
-
-const MONTHS = [
-  '', 'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-
-function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
+import { formatCurrency } from '../utils/formatCurrency';
+import { MONTH_NAMES } from '../utils/dateConstants';
 
 export default function PayslipModal({ slip, month, year, loading, error, onClose }) {
   const overlayRef = useRef(null);
@@ -47,7 +36,7 @@ export default function PayslipModal({ slip, month, year, loading, error, onClos
             <h2 className={styles.modalTitle}>Payslip</h2>
             {slip && (
               <p className={styles.modalSubtitle}>
-                {MONTHS[month]} {year}
+                {MONTH_NAMES[month]} {year}
               </p>
             )}
           </div>
@@ -94,7 +83,7 @@ export default function PayslipModal({ slip, month, year, loading, error, onClos
               <div className={styles.period}>
                 <span className={styles.periodLabel}>Pay Period</span>
                 <span className={styles.periodValue}>
-                  {MONTHS[month]} {year}
+                  {MONTH_NAMES[month]} {year}
                 </span>
               </div>
 

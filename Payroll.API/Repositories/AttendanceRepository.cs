@@ -14,14 +14,7 @@ namespace Payroll.API.Repositories
             _config = config;
         }
 
-        public async Task<IEnumerable<Attendance>>GetAll()
-        {
-            using var conn =new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-
-            return await conn.QueryAsync<Attendance>("SELECT * FROM Attendance");
-        }
-
-        public async Task<IEnumerable<Attendance>>GetByMonth(int month,int year)
+        public async Task<IEnumerable<Attendance>> GetByMonth(int month, int year)
         {
             using var conn =new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 

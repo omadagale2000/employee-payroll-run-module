@@ -7,8 +7,6 @@ namespace Payroll.API.Services
     {
         Task Add(AttendanceDto dto);
 
-        Task<IEnumerable<Attendance>>GetAll();
-
-        Task<IEnumerable<Attendance>>GetByMonth(int month,int year);
+        Task<IEnumerable<Attendance>> GetByMonth(int month, int year);
     }
 }

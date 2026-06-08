@@ -15,7 +15,7 @@ namespace Payroll.API.Services
 
         public async Task Add(AttendanceDto dto)
         {
-            if (dto.DaysPresent >dto.WorkingDays)
+            if (dto.DaysPresent > dto.WorkingDays)
             {
                 throw new Exception("Invalid attendance");
             }
@@ -23,12 +23,7 @@ namespace Payroll.API.Services
             await _repo.Add(dto);
         }
 
-        public async Task<IEnumerable<Attendance>>GetAll()
-        {
-            return await _repo.GetAll();
-        }
-
-        public async Task<IEnumerable<Attendance>>GetByMonth(int month,int year)
+        public async Task<IEnumerable<Attendance>> GetByMonth(int month, int year)
         {
             return await _repo.GetByMonth(month,year);
         }
