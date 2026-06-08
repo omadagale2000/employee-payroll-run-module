@@ -26,6 +26,10 @@ builder.Services.AddScoped<IPayrollRepository,PayrollRepository>();
 
 builder.Services.AddScoped<IPayrollService,PayrollService>();
 
+builder.Services.AddScoped<IAttendanceRepository,AttendanceRepository>();
+
+builder.Services.AddScoped<IAttendanceService,AttendanceService>();
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");
