@@ -3,6 +3,15 @@ import styles from './PayslipModal.module.css';
 import { formatCurrency } from '../utils/formatCurrency';
 import { MONTH_NAMES } from '../utils/dateConstants';
 
+function handlePrint() {
+  document.body.classList.add('payslip-printing');
+  window.print();
+  // Remove after print dialog closes (works for both Print and Cancel)
+  window.addEventListener('afterprint', () => {
+    document.body.classList.remove('payslip-printing');
+  }, { once: true });
+}
+
 export default function PayslipModal({ slip, month, year, loading, error, onClose }) {
   const overlayRef = useRef(null);
 
@@ -29,7 +38,7 @@ export default function PayslipModal({ slip, month, year, loading, error, onClos
       aria-modal="true"
       aria-label="Payslip"
     >
-      <div className={styles.modal}>
+      <div className={styles.modal} id="payslip-printable">
         {/* Modal header */}
         <div className={styles.modalHeader}>
           <div>
@@ -40,13 +49,25 @@ export default function PayslipModal({ slip, month, year, loading, error, onClos
               </p>
             )}
           </div>
-          <button
-            className={styles.closeBtn}
-            onClick={onClose}
-            aria-label="Close payslip"
-          >
-            ✕
-          </button>
+          <div className={styles.headerActions}>
+            {slip && !loading && !error && (
+              <button
+                className={styles.printBtn}
+                onClick={handlePrint}
+                aria-label="Print payslip"
+                title="Print payslip"
+              >
+                🖨 Print
+              </button>
+            )}
+            <button
+              className={styles.closeBtn}
+              onClick={onClose}
+              aria-label="Close payslip"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         {/* Content */}

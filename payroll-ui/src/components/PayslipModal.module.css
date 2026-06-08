@@ -42,6 +42,35 @@
   flex-shrink: 0;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.printBtn {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.printBtn:hover {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
 .modalTitle {
   font-size: 16px;
   font-weight: 600;
@@ -267,4 +296,48 @@
   font-size: 18px;
   font-weight: 700;
   color: #16a34a;
+}
+
+/* ── Print styles ── */
+@media print {
+  /* Reset overlay to a non-blocking container */
+  .overlay {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    display: block !important;
+    animation: none !important;
+    z-index: auto !important;
+  }
+
+  /* Modal card: no scroll constraints, no shadow, fill naturally */
+  .modal {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-height: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    animation: none !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .body {
+    overflow: visible !important;
+  }
+
+  /* Hide the button row */
+  .headerActions,
+  .closeBtn,
+  .printBtn {
+    display: none !important;
+  }
+
+  /* Ensure colored backgrounds print */
+  .netPayRow,
+  .attendanceItem,
+  .period {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }

@@ -31,3 +31,29 @@ select,
 input {
   font-family: inherit;
 }
+
+/* ── Global print rules ── */
+@media print {
+  /* When the payslip modal is open, hide everything except the modal card */
+  body.payslip-printing * {
+    visibility: hidden !important;
+  }
+
+  body.payslip-printing #payslip-printable,
+  body.payslip-printing #payslip-printable * {
+    visibility: visible !important;
+  }
+
+  body.payslip-printing #payslip-printable {
+    /* Take over the full print page */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+}
