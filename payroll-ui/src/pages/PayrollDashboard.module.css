@@ -1,0 +1,23 @@
+.page {
+  min-height: calc(100vh - 64px);
+  background: #f8fafc;
+  padding: 28px 24px 48px;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tableSection {
+  /* stretches to fill remaining width */
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 20px 16px 40px;
+  }
+}

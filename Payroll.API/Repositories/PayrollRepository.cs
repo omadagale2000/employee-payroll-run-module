@@ -53,6 +53,7 @@ namespace Payroll.API.Repositories
             var sql = @"
                         SELECT
 
+                        pr.Id AS RunId,
                         e.Id AS EmployeeId,
                         e.Name,
                         e.BasicSalary,
@@ -98,6 +99,7 @@ namespace Payroll.API.Repositories
             var sql = @"
                         SELECT TOP 1
 
+                        pr.Id AS RunId,
                         e.Id AS EmployeeId,
                         e.Name,
                         e.BasicSalary,

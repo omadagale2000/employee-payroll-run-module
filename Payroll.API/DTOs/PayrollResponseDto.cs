@@ -2,6 +2,8 @@
 {
     public class PayrollResponseDto
     {
+        public int RunId { get; set; }
+
         public int EmployeeId { get; set; }
 
         public string Name { get; set; }
