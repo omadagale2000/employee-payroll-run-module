@@ -1,0 +1,60 @@
+###################
+# .NET / Visual Studio
+###################
+
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+###################
+# ASP.NET
+###################
+
+appsettings.Development.json
+appsettings.Local.json
+publish/
+
+###################
+# Logs
+###################
+
+*.log
+
+###################
+# Frontend (React)
+###################
+
+payroll-ui/node_modules/
+payroll-ui/build/
+payroll-ui/dist/
+
+###################
+# IDE
+###################
+
+.vscode/
+.idea/
+
+###################
+# Testing
+###################
+
+TestResults/
+
+###################
+# Database
+###################
+
+*.mdf
+*.ldf
+
+###################
+# OS Files
+###################
+
+.DS_Store
+Thumbs.db
